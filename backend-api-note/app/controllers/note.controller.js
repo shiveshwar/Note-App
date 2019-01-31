@@ -61,6 +61,53 @@ exports.findOne = (req, res) => {
     });
 };
 
+exports.find = (req, res) => {
+    //query with mongoose
+    Note.find({"userId": req.params.userId})
+        // if(note){
+        //     res.send(note);
+        // }
+        .then(note => {
+            if(!note) {
+                return res.status(404).send({
+                    message: "Note not found with id " + req.params.userId
+                });            
+            }
+            res.send(note);
+        }).catch(err => {
+            if(err.kind === 'ObjectId') {
+                return res.status(404).send({
+                    message: "Note not found with id " + req.params.userId
+                });                
+            }
+            return res.status(500).send({
+                message: "Error retrieving note with id " + req.params.userId
+            });
+        });
+};
+
+exports.findByUserIdByKeyword = (req, res) => {
+
+    Note.find({"userId": req.params.userId, "keyword": req.params.keyword})
+        .then(note => {
+            if(!note) {
+                return res.status(404).send({
+                    message: "Note not found with id " + req.params.userId
+                });            
+            }
+            res.send(note);
+        }).catch(err => {
+            if(err.kind === 'ObjectId') {
+                return res.status(404).send({
+                    message: "Note not found with id " + req.params.userId
+                });                
+            }
+            return res.status(500).send({
+                message: "Error retrieving note with id " + req.params.userId
+            });
+        });
+};
+
 // Update a note identified by the noteId in the request
 exports.update = (req, res) => {
     // Validate Request

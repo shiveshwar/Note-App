@@ -1,6 +1,6 @@
 const User = require('../models/user.module.js');
 
-// Create and Save a new Note
+// Create and Save a new user
 exports.create = (req, res) => {
     // Validate request
     if(!req.body.username) {
@@ -9,14 +9,14 @@ exports.create = (req, res) => {
         });
     }
 
-    // Create a Note
+    // Create a user
     const user = new User({
         username: req.body.username || "Untitled User", 
         firstname: req.body.firstname,
         lastname: req.body.lastname
     });
 
-    // Save Note in the database
+    // Save user in the database
     user.save()
     .then(data => {
         res.send(data);

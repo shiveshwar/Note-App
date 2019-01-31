@@ -32,10 +32,7 @@ app.get('/', (req, res) => {
 });
 
 require('./app/routes/note.routes.js')(app);
-// require('./app/routes/user.routes.js')(app);
-
-// app.use('./app/routes/note.routes.js', require('./app/routes/note.routes.js'));
-// app.use('./app/routes/user.routes.js', require('./app/routes/user.routes.js'));
+require('./app/routes/user.routes.js')(app);
 
 // listen for requests
 app.listen(3000, () => {
