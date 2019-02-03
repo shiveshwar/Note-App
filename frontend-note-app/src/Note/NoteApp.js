@@ -73,7 +73,6 @@ class NoteApp extends Component {
 
     const valid = this.validation();
 
-    // if (valid !== true) {
     axios.post(`http://localhost:3000/notes`, {
 
       note: this.state.note,
@@ -88,10 +87,11 @@ class NoteApp extends Component {
           keyword: '',
           userId: '',
           isNoteAdd: false,
+          searchUserId:'',
+          search: '',
         });
       }
     })
-    // }
   }
 
   validation() {
@@ -182,7 +182,7 @@ class NoteApp extends Component {
                   value={this.state.search}
                   onChange={this.handleInputChange}
                   placeholder="Search by keword"
-                  style={{ display: 'inline-block', width: '170px' }}
+                  style={{ display: 'inline-block', width:'170px' }}
                 />
 
                 <Input type="select"
@@ -219,12 +219,6 @@ class NoteApp extends Component {
           <Card>
             <CardBody>
 
-              {/* {this.state.error &&
-                <Alert color="danger">
-                  {this.state.error}
-                </Alert>
-              } */}
-
               {this.state.errorMessage.length > 0 &&
                 <Alert color="danger">
                   {this.state.errorMessage.map(error =>
@@ -254,5 +248,4 @@ class NoteApp extends Component {
     );
   }
 }
-
 export default NoteApp;
