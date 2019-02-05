@@ -12,4 +12,4 @@ var user = [{
     lastname : "Sakle"
 }];
 
-db.Users.insertMany(user);
+db.users.insertMany(user);

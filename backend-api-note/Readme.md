@@ -37,7 +37,7 @@ After taking clone go on path of folder => Note-App/backend-api-note/
 
 #to add defult users run following command 
 
-Run: mongo 127.0.0.1/test mongo.js
+Run: mongo localhost:27017/easy-notes mongo.js
 
 #And do following steps
 
