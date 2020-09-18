@@ -8,7 +8,7 @@ Build a Restful CRUD API for a simple Note-application using Node.js, Express an
 1) node 
 2) mongodb 
 
-#vMongodb setup : To install mongodb refer URL https://docs.mongodb.com/manual/installation/
+#vMongodb setup : To install mongodb refer URL https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
 
 # For linux Ubunto 16 env :
 
