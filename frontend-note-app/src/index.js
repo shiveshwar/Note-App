@@ -2,5 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import NoteApp from './Note/NoteApp';
+import configureStore  from './store/configureStore';
+import { Provider } from 'react-redux';
 
-ReactDOM.render(<NoteApp />, document.getElementById('root'));
+
+const App = () => (
+    <Provider store={configureStore()}>
+        <NoteApp />
+    </Provider>
+);
+
+ReactDOM.render(<App />, document.getElementById('root'));

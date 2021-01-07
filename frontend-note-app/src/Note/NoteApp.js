@@ -1,18 +1,24 @@
-import React, { Component } from 'react';
+
+import React , { Component } from 'react';
+import { connect } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios';
 import {
-  Card, Button, CardHeader, CardFooter, CardBody, Label,
-  CardTitle, CardText, Input, Alert, Table
+  Card, Button, CardBody,
+  CardTitle, Input, Alert, Table
 } from 'reactstrap';
 import './NoteApp.css';
 
+import { viewNote, searchUserByIdByNote } from "../actions/note";
+import { getUsers } from '../actions/user';
 class NoteApp extends Component {
 
   static propTypes = {
+
   };
 
   constructor(props) {
+    console.log('-------constructor---------------');
     super(props);
 
     this.state = {
@@ -37,19 +43,54 @@ class NoteApp extends Component {
     
   }
 
-  componentDidMount() {
-    axios.get(`http://localhost:3000/users`)
-      .then(res => {
-        const users = res.data;
-        this.setState({ users });
-      });
+  // static getDerivedStateFromProps(props, state) {
+  //   console.log('-------getDerivedStateFromProps---------------');
+  //   console.log('-------props---------------', props.notes);
+  //   return {notes: props.notes };
+  // }
 
-    axios.get(`http://localhost:3000/notes`)
-      .then(res => {
-        const notes = res.data;
-        this.setState({ notes });
-      });
+  static getDerivedStateFromProps(nextProps, prevState) {
+    
+    console.log('-------getDerivedStateFromProps---------------');
+    console.log('-------nextProps---------------',nextProps.noteReducer.notes);
+    console.log('-------prevState---------------',prevState);
+    // do things with nextProps.someProp and prevState.cachedSomeProp
+    return {
+      notes: nextProps.noteReducer.notes,
+      users: nextProps.userReducer.users
+      // ... other derived state properties
+    };
+    
   }
+
+ 
+  componentDidMount() {
+    console.log('-------componentDidMount---------------');
+
+    this.props.viewNote();
+    this.props.getUsers();
+    console.log('-------after----viewNote--------');
+    // this.props.viewNote(viewNote()); // << use it here
+
+    // axios.get(`http://localhost:3000/users`)
+    //   .then(res => {
+    //     const users = res.data;
+    //     this.setState({ users });
+    //   });
+
+    // axios.get(`http://localhost:3000/notes`)
+    //   .then(res => {
+    //     const notes = res.data;
+    //     console.log('-------componentDidMount------from-----axios----', notes);
+    //     this.setState({ notes });
+    // });
+
+
+
+  }
+
+ 
+  
 
   handleInputChange(event) {
     event.preventDefault();
@@ -72,26 +113,29 @@ class NoteApp extends Component {
     });
 
     const valid = this.validation();
+    console.log('-------handleSubmit---------------');
 
-    axios.post(`http://localhost:3000/notes`, {
+    if(valid){
+      axios.post(`http://localhost:3000/notes`, {
 
-      note: this.state.note,
-      keyword: this.state.keyword,
-      userId: this.state.userId
-
-    }).then(res => {
-      if (res.data) {
-        this.setState({
-          isSave: true,
-          note: '',
-          keyword: '',
-          userId: '',
-          isNoteAdd: false,
-          searchUserId:'',
-          search: '',
-        });
-      }
-    })
+        note: this.state.note,
+        keyword: this.state.keyword,
+        userId: this.state.userId
+  
+      }).then(res => {
+        if (res.data) {
+          this.setState({
+            isSave: true,
+            note: '',
+            keyword: '',
+            userId: '',
+            isNoteAdd: false,
+            searchUserId:'',
+            search: '',
+          });
+        }
+      })
+    }
   }
 
   validation() {
@@ -123,21 +167,34 @@ class NoteApp extends Component {
   handleSearch(event) {
     event.preventDefault();
 
+    // let url = `http://localhost:3000/notes/user/`;
     let userId = this.state.searchUserId;
     let keyword = this.state.search;
-
     let url = `http://localhost:3000/notes/user/${userId}/${keyword}`;
+   
 
-    console.log("url", url);
-    axios.get(url)
-    .then(res => {
-      const notes = res.data;
-      this.setState({ notes });
-    });
+    // if(userId && keyword){
+    //     url = `http://localhost:3000/notes/user/${userId}/${keyword}`;
+    // }else if(userId){
+    //     url = `http://localhost:3000/notes/user/${userId}`;
+    // }else if(keyword){
+    //     url = `http://localhost:3000/notes/user/${keyword}`;
+    // }
+
+    console.log("-----url---------", url);
+    this.props.searchUserByIdByNote(url);
+
+    // axios.get(url)
+    // .then(res => {
+    //   const notes = res.data;
+    //   this.setState({ notes });
+    // });
     
   }
 
   render() {
+    console.log('-------thia is state', this.state.notes);
+    console.log('---------render()---------------', this.state.notes);
 
     let users;
     let listNotes;
@@ -248,4 +305,16 @@ class NoteApp extends Component {
     );
   }
 }
-export default NoteApp;
+
+const mapStateToProps = state => ({
+  ...state
+});
+const mapDispatchToProps = dispatch => ({
+  viewNote: () => dispatch(viewNote()),
+  getUsers : () => dispatch(getUsers()),
+  searchUserByIdByNote : () => dispatch(searchUserByIdByNote())
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(NoteApp);
+// export default NoteApp;
